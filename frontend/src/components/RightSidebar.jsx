@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import API from "../api/axios.js";
 import { Link } from "react-router-dom";
+import Loader from "./loadingCompos/Loader.jsx";
+import FollowersLoading from "./loadingCompos/FollowersLoading.jsx";
 
 const RightSidebar = () => {
   const [followers, setFollowers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     API.get("/users/me/followers")
@@ -14,7 +17,16 @@ const RightSidebar = () => {
       .catch((err) => {
         console.error(err);
       })
+      .finally(() => setLoading(false));
   }, [])
+  if(loading) {
+    return (
+      <div className="w-full py-6 text-center text-black-500">
+        <Loader/>
+        <FollowersLoading/>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-white rounded-lg shadow p-4 mt-6 right-container">

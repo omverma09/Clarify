@@ -33,6 +33,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/follow", followRoutes);
 
+
 // Test Route
 app.get("/", (req, res) => {
   res.send("Backend is Running");

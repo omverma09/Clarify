@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API from "../api/axios";
+import API from "../api/axios.js";
+import { TextField, Button, Alert, CircularProgress } from "@mui/material";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
@@ -20,17 +24,26 @@ const Register = () => {
         email,
         password,
       });
-      alert(res.data.message || "Registered successfully");
 
-      // optional: clear form
+      // Success message
+      alert(res.data.message || "OTP sent to email");
+
+      // Clear form (optional)
       setName("");
       setUsername("");
       setEmail("");
       setPassword("");
-      navigate("/clarify/login");
+
+      // 👉 Navigate to OTP screen, NOT login
+      navigate("/clarify/verify-otp", {
+        state: {
+          tempId: res.data.tempId,
+          email: email,
+        },
+      });
 
     } catch (err) {
-      alert(err?.response?.data?.message);
+      alert(err?.response?.data?.message || "Registration failed");
     }
   };
 
@@ -40,6 +53,7 @@ const Register = () => {
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
           Create an account
         </h2>
+        {error && <Alert severity="error">{error}</Alert>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -77,8 +91,36 @@ const Register = () => {
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition"
           >
-            Register
+            Register {loading ? <CircularProgress size={24} /> : "Send OTP"}
           </button>
+          <Button
+            variant="outlined"
+            fullWidth
+            sx={{
+              mt: 2,
+              mb: 2,
+              textTransform: "none",
+              fontWeight: 500,
+              borderRadius: "10px",
+              borderColor: "#bdbcbc",
+              color: "#000",
+              height: 48,
+              display: "flex",
+              gap: 1,
+              "&:hover": {
+                borderColor: "#5e5d5d",
+                backgroundColor: "#fafafa",
+              },
+            }}
+          >
+            <img
+              src="https://developers.google.com/identity/images/g-logo.png"
+              alt="Google"
+              style={{ width: 20, height: 20 }}
+            />
+            Sign Up with Google
+          </Button>
+
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-4">

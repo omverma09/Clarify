@@ -6,7 +6,7 @@ export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
       .select("name username email image banner bio badge followers following createdAt");
-    
+
     res.json(user);
 
   } catch (err) {
@@ -75,5 +75,34 @@ export const getMyFollowers = async (req, res) => {
     res.json({ followers: user.followers });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+// For searching users
+export const searchUsers = async (req, res) => {
+  try {
+    const q = req.query.q;
+
+    console.log("Search query:", q);
+
+    if (!q || q.trim() === "") {
+      return res.status(200).json([]);
+    }
+
+    const users = await User.find({
+      $or: [
+        { username: { $regex: q, $options: "i" } },
+        { name: { $regex: q, $options: "i" } },
+      ],
+    })
+      .select("_id username name image")
+      .limit(10);
+
+    console.log("Users found:", users.length);
+    return res.status(200).json(users);
+
+  } catch (error) {
+    console.error("Search error:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };

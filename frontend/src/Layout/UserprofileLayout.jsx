@@ -10,7 +10,7 @@ export default function UserprofileLayout() {
 
       <div className="flex">
         {/* LEFT SIDEBAR */}
-        <div className="hidden md:block w-64">
+        <div className="">
           <LeftSidebar />
         </div>
 

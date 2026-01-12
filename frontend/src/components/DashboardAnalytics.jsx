@@ -6,17 +6,17 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 const stats = [
   {
     title: "Total Users",
-    value: "1,248",
+    value: "04",
     icon: <GroupIcon className="text-blue-500" />,
   },
   {
     title: "Total Posts",
-    value: "342",
+    value: "03",
     icon: <ArticleIcon className="text-green-500" />,
   },
   {
     title: "Total Views",
-    value: "18.4K",
+    value: "12.4K",
     icon: <VisibilityIcon className="text-purple-500" />,
   },
   {
@@ -26,7 +26,7 @@ const stats = [
   },
 ];
 
-const DashboardAnalytics = () => {
+const DashboardAnalytics = ({postCount}) => {
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-6">
       

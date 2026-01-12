@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserByUsername, getMe, updateProfile, getMyFollowers } from "../controllers/user.controller.js";
+import { getUserByUsername, getMe, updateProfile, getMyFollowers, searchUsers } from "../controllers/user.controller.js";
 import protect from "../middlewares/auth.middleware.js";
 import upload from "../config/cloudinary.config.js";
 
@@ -7,6 +7,7 @@ const router = express.Router();
 
 // logged-in user profile
 router.get("/me", protect, getMe);
+router.get("/search", searchUsers);
 
 //logged in user ke followers
 router.get("/me/followers", protect, getMyFollowers);
@@ -19,5 +20,6 @@ router.put("/profile/update", protect, upload.fields([
     { name: "image", maxCount: 1 },
     { name: "banner", maxCount: 1 },
 ]), updateProfile);
+
 
 export default router;

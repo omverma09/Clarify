@@ -9,12 +9,18 @@ import DashboardAnalytics from "./DashboardAnalytics";
 import DashboardPosts from "./DashboardPosts";
 import FollowBtn from "./FollowBtn";
 import MessageBtn from "./MessageBtn";
+import Loader from "./loadingCompos/Loader.jsx";
+import ProfileLoader from "./loadingCompos/ProfileLoader.jsx"
 
 export default function DashboardProfile() {
+  const style = {
+    color: "rgb(47, 47, 47)"
+  }
 
   const { username } = useParams();
   const [user, setUser] = useState(null);
   const [postCount, setPostCount] = useState(0);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const loggedInUser = JSON.parse(localStorage.getItem("user"));
@@ -29,33 +35,38 @@ export default function DashboardProfile() {
         });
         setPostCount(res.data.postCount);
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, [username]);
-  if (!user) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className="w-full py-6 text-center text-black-500">
+        <Loader />
+        <ProfileLoader />
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="bg-white rounded-lg shadow mt-16  md:p-6 ">
-        {/* BANNER */}
         <div className="h-48 relative">
           <img src={user.banner} alt="banner"
             className="w-full h-full object-cover rounded-t-lg "
           />
 
-          {/* PROFILE IMAGE */}
           <img src={user.image} alt="profile"
             className="w-32 h-32 rounded-full border-4 border-white absolute -bottom-16 left-6"
           />
         </div>
 
-        {/* PROFILE INFO */}
-        <div className="pt-20 px-6 pb-6">
-          <h1 className="text-2xl font-bold user-detail">{user.name}</h1>
-          <p className="text-gray-600">@{user.username}</p>
+        <div className="pt-20 px-6 pb-6 ">
+          <h1 className="text-2xl font-bold user-detail" style={style}>{user.name}</h1>
+          <p className="text form" style={style}>@{user.username}</p>
 
-          <p className="mt-3 text-gray-700">{user.bio}</p>
+          <p className="mt-3 text-black-600" style={style}>{user.bio}</p>
 
-          <div className="flex gap-6 mt-4 text-sm user-detail">
+          <div className="flex gap-6 mt-4 text-sm user-detail" style={style}>
             <span>
               <b>{user?.followers?.length || 0}</b> Followers
             </span>
@@ -104,7 +115,7 @@ export default function DashboardProfile() {
 
       </div>
 
-      {isOwner && <DashboardAnalytics />}
+      {isOwner && <DashboardAnalytics postcount={postCount} />}
 
       <DashboardPosts />
     </>

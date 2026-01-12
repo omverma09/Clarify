@@ -89,7 +89,7 @@ export default function Sidebar() {
 
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton to="/">
             <ListItemIcon><HomeIcon /></ListItemIcon>
             {open && <ListItemText primary="Home" />}
           </ListItemButton>
@@ -114,30 +114,30 @@ export default function Sidebar() {
 
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton to="/clarify/about-us">
             <ListItemIcon><InfoIcon /></ListItemIcon>
-            {open && <ListItemText primary="About Reddit" />}
+            {open && <ListItemText primary="About Clarify" />}
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton to="/clarify/advertising">
             <ListItemIcon><FeaturedVideoIcon /></ListItemIcon>
             {open && <ListItemText primary="Advertizing" />}
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton to="/clarify/out-best">
             <ListItemIcon><StarBorderPurple500Icon /></ListItemIcon>
             {open && <ListItemText primary="Best of Clarify" />}
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton  to="/clarify/help">
             <ListItemIcon><HelpIcon /></ListItemIcon>
-            {open && <ListItemText primary="Help" />}
+            {open && <ListItemText primary="Help"/>}
           </ListItemButton>
         </ListItem>
       </List>

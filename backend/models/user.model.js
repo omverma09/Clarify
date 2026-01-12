@@ -21,12 +21,12 @@ const userSchema = new mongoose.Schema(
             unique: true,
             lowercase: true,
         },
-        otp: String,
-        otpExpires: Date,
-        isVerified: {
-            type: Boolean,
-            default: false,
-        },
+        // otp: String,
+        // otpExpires: Date,
+        // isVerified: {
+        //     type: Boolean,
+        //     default: false,
+        // },
 
         password: {
             type: String,
@@ -77,6 +77,8 @@ const userSchema = new mongoose.Schema(
         timestamps: true, // createdAt, updatedAt
     }
 );
+userSchema.index({ username: 1 });
+userSchema.index({ name: 1 });
 
 const User = mongoose.model("User", userSchema);
 

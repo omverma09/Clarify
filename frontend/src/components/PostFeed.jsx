@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import PostCard from "./PostCard";
 import API from "../api/axios";
+import PostSkeleton from "./loadingCompos/FeedLoader.jsx"
+import Loader from "./loadingCompos/Loader.jsx";
 
 const PostFeed = () => {
   const [posts, setPosts] = useState([]);
@@ -26,7 +28,8 @@ const PostFeed = () => {
   if (loading) {
     return (
       <div className="w-full py-6 text-center text-black-500">
-        Loading posts...
+        <Loader/>
+        <PostSkeleton/>
       </div>
     );
   }
