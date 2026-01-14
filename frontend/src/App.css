@@ -179,23 +179,23 @@ body {
 
 /*Footer ki css*/
 
-.footer-icons{
+.footer-icons {
   display: inline;
-  
+
   cursor: pointer;
 }
-.footer-icons span{
-  
-}
+
+.footer-icons span {}
 
 .nav-link.active {
   color: #f58220 !important;
   font-weight: 600;
 }
 
-.otp-head{
+.otp-head {
   color: rgb(96, 96, 96);
 }
+
 .otp-page {
   min-height: 100vh;
   display: flex;
@@ -254,4 +254,27 @@ body {
     margin: 0 12px;
     padding: 20px;
   }
+}
+
+.app {
+  display: flex;
+
+}
+
+.left {
+  width: 30px;
+  flex-shrink: 0;
+}
+
+.feed {
+  flex: 1;
+  min-width: 0;
+}
+
+.right {
+  width: 250px;
+  flex-shrink: 0;
+}
+.right-container{
+  width: 350px;
 }

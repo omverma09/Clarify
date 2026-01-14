@@ -29,7 +29,7 @@ const RightSidebar = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 mt-6 right-container">
+    <div className="bg-white rounded-lg p-4 mt-6 right-container" >
       <h3 className="font-semibold mb-4 text-gray-800">
         Message your followers...
       </h3>

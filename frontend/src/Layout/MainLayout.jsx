@@ -8,12 +8,16 @@ const MainLayout = () => {
     <>
       <Navbar />
 
-      <div className="layout main-content bg-gray-100">
-        <LeftSidebar />
-        <div className="center-content">
+      <div className="app layout main-content bg-gray-100">
+        <div className="left">
+          <LeftSidebar />
+        </div>
+        <div className="flex-1">
           <Feed />
         </div>
-        <RightSidebar/>
+        <div className="right hidden sm:flex">
+          <RightSidebar />
+        </div>
       </div>
     </>
   );

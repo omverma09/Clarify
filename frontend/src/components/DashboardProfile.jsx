@@ -49,7 +49,7 @@ export default function DashboardProfile() {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow mt-16  md:p-6 ">
+      <div className="bg-white rounded-lg shadow mt-16 ml-7">
         <div className="h-48 relative">
           <img src={user.banner} alt="banner"
             className="w-full h-full object-cover rounded-t-lg "
@@ -117,8 +117,6 @@ export default function DashboardProfile() {
         <DashboardPosts />
 
       </div>
-
-
     </>
   );
 }

@@ -22,10 +22,10 @@ import { Link } from "react-router-dom";
 
 const NAVBAR_HEIGHT = 56;
 const EXPANDED_WIDTH = 240;
-const COLLAPSED_WIDTH = 72;
+const COLLAPSED_WIDTH = 50;
 
 export default function Sidebar() {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [username, setUsername] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));

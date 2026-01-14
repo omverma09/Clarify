@@ -2,7 +2,7 @@ import PostFeed from "../components/PostFeed.jsx";
 
 const Feed = () => {
   return (
-    <div className="w-ful">
+    <div className="w-full">
       <PostFeed />
     </div>
   );

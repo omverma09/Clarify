@@ -31,20 +31,19 @@ function App() {
         <Route path="/clarify/verify-otp" element={<VerifyOtp />} />
 
         {/* PROTECTED ROUTES */}
-        <Route element={<ProtectedRoute />}>
-          <Route element={<UserprofileLayout />}>
+
+        <Route element={<UserprofileLayout />}>
+          <Route element={<ProtectedRoute />}>
             <Route path="/clarify/user/:username" element={<UserProfilePage />} />
             <Route path="/clarify/user/:username/edit" element={<EditProfile />} />
             <Route path="/clarify/user/:username/post-something" element={<CreatePost />} />
-
-            <Route path="/clarify/help" element={<HelpPage />} />
-            <Route path="/clarify/out-best" element={<BestOfClarify />} />
-            <Route path="/clarify/about-us" element={<AboutClarify />} />
-            <Route path="/clarify/advertising" element={<AdvertisingHome />} />
           </Route>
-          
+          <Route path="/clarify/help" element={<HelpPage />} />
+          <Route path="/clarify/out-best" element={<BestOfClarify />} />
+          <Route path="/clarify/about-us" element={<AboutClarify />} />
+          <Route path="/clarify/advertising" element={<AdvertisingHome />} />
         </Route>
-         <Route path="*" element={<NotFound/>}/>
+        <Route path="*" element={<NotFound />} />
 
       </Routes>
     </AuthProvider>
