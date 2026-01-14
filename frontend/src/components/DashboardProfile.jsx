@@ -112,12 +112,13 @@ export default function DashboardProfile() {
             )}
           </div>
         </div>
+        {isOwner && <DashboardAnalytics postcount={postCount} />}
+
+        <DashboardPosts />
 
       </div>
 
-      {isOwner && <DashboardAnalytics postcount={postCount} />}
 
-      <DashboardPosts />
     </>
   );
 }

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import API from "../api/axios.js";
+import { useAuth } from "../context/AuthContext .jsx";
+import { useNavigate } from "react-router-dom";
 
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -16,6 +18,18 @@ const PostCard = ({ post }) => {
   const [upvotes, setUpvotes] = useState(post.upvotes.length);
   const [downvotes, setDownvotes] = useState(post.downvotes.length);
   const [showComment, setShowComment] = useState(false);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const requireLogin = () => {
+    if (!user) {
+      navigate("/clarify/login");
+      return false;
+    }
+    return true;
+  };
+
 
   const score = upvotes - downvotes;
 
@@ -49,7 +63,7 @@ const PostCard = ({ post }) => {
             />
           </div>
           <span className="font-semibold username">
-            <Link to={`/clarify/user/${post.user.username}`}>
+            <Link to={user ? `/clarify/user/${post.user.username}` : "/clarify/login"}>
               @{post.user.username}
             </Link>
           </span>
@@ -70,7 +84,7 @@ const PostCard = ({ post }) => {
         <img
           src={post.image}
           alt="post"
-          className="w-full max-h-[500px] object-cover"
+          className="w-full max-h-[500px] object-cover p-8"
         />
       )}
 
@@ -90,14 +104,20 @@ const PostCard = ({ post }) => {
       <div className="flex items-center gap-8 px-4 py-3 text-sm text-gray-600">
         <div className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full">
           <ArrowUpwardIcon
-            onClick={() => handleVote("up")}
+            onClick={() => {
+              if (!requireLogin()) return;
+              handleVote("up")
+            }}
             className="cursor-pointer hover:text-orange-500"
           />
 
           <span className="font-medium">{score}</span>
 
           <ArrowDownwardIcon
-            onClick={() => handleVote("down")}
+            onClick={() => {
+              if (!requireLogin()) return;
+              handleVote("down")
+            }}
             className="cursor-pointer hover:text-blue-500"
           />
         </div>
@@ -105,7 +125,12 @@ const PostCard = ({ post }) => {
         <div className="flex items-center gap-1 hover:bg-gray-100 px-2 py-1 rounded-full cursor-pointer"
           onClick={() => setShowComment(!showComment)}
         >
-          <ChatBubbleOutlineIcon />
+          <ChatBubbleOutlineIcon
+            onClick={() => {
+              if (!requireLogin()) return;
+              setShowComment(true);
+            }}
+          />
           <span>{post.commentsCount}</span>
         </div>
         <div className="flex items-center gap-1 hover:bg-gray-100 px-2 py-1 rounded-full cursor-pointer">
