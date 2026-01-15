@@ -19,7 +19,8 @@ const PostCard = ({ post }) => {
   const [downvotes, setDownvotes] = useState(post.downvotes.length);
   const [showComment, setShowComment] = useState(false);
 
-  const { user } = useAuth();
+  const { user, loading  } = useAuth();
+  if (loading) return null;
   const navigate = useNavigate();
 
   const requireLogin = () => {
@@ -50,7 +51,7 @@ const PostCard = ({ post }) => {
 
 
   return (
-    <div className="bg-white border rounded-lg mb-6 hover:border-gray-300 transition">
+    <div className="bg-white border rounded-lg mb-6 hover:border-gray-300 transition card">
 
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 text-sm">
@@ -67,11 +68,10 @@ const PostCard = ({ post }) => {
               @{post.user.username}
             </Link>
           </span>
-          <span className="text-gray-500 date">
+          <div><span className="text-gray-500 date">
             • {new Date(post.createdAt).toLocaleString()}
-          </span>
+          </span></div>
         </div>
-        <MoreHorizIcon className="text-gray-500 cursor-pointer" />
       </div>
 
       {/* Content */}
@@ -84,7 +84,7 @@ const PostCard = ({ post }) => {
         <img
           src={post.image}
           alt="post"
-          className="w-full max-h-[500px] object-cover p-8"
+          className="w-full max-h-[500px] object-cover p-8 card-img"
         />
       )}
 

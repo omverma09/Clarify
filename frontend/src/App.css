@@ -129,9 +129,9 @@ body {
   color: #0f172a;
 }
 
-.date {
+/* .date {
   margin-left: 7rem;
-}
+} */
 
 .post-card {
   display: flex;
@@ -277,4 +277,11 @@ body {
 }
 .right-container{
   width: 350px;
+}
+
+@media (max-width: 440px) {
+  .card {
+    width: 95%;
+    height: auto;
+  }
 }
