@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://clarify-i166.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 // Token attach automatically

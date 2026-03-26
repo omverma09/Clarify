@@ -3,7 +3,7 @@ import User from "../models/user.model.js";
 
 /* CREATE POST */
 export const createPost = async (req, res) => {
-   try {
+  try {
     const post = await Post.create({
       user: req.user.id,
       content: req.body.content,
@@ -21,11 +21,24 @@ export const createPost = async (req, res) => {
 /* GET ALL POSTS (FEED) */
 export const getAllPosts = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 3;
+
+    const skip = (page - 1) * limit;
+
     const posts = await Post.find()
       .populate("user", "username image")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
-    res.json(posts);
+    const totalPosts = await Post.countDocuments();
+
+    res.json({
+      posts,
+      hasMore: skip + posts.length < totalPosts,
+    });
+
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
