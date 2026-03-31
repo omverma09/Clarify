@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import axios from "axios";
+const baseURL = import.meta.env.VITE_API_BASE_URL.replace('/api', '');
 import API from "../api/axios";
 
 const ChatContext = createContext();
@@ -19,7 +19,7 @@ export const ChatProvider = ({ children }) => {
     useEffect(() => {
         if (!token) return;
 
-        const newSocket = io("http://localhost:5000", {
+        const newSocket = io(baseURL, {
             auth: { token }
         });
 
