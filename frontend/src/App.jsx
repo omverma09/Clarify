@@ -8,6 +8,7 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import VerifyOtp from "./pages/VerifyOtp.jsx";
 import UserProfilePage from "./pages/UserProfilePage.jsx";
+import ChatPage from "./pages/ChatPage.jsx";
 import EditProfile from "./components/Editprofile.jsx";
 import CreatePost from "./components/CreatePost.jsx";
 
@@ -33,15 +34,20 @@ function App() {
         {/* PROTECTED ROUTES */}
 
         <Route element={<UserprofileLayout />}>
+
           <Route element={<ProtectedRoute />}>
             <Route path="/clarify/user/:username" element={<UserProfilePage />} />
             <Route path="/clarify/user/:username/edit" element={<EditProfile />} />
             <Route path="/clarify/user/:username/post-something" element={<CreatePost />} />
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/chat/:userId" element={<ChatPage />} />
           </Route>
+
           <Route path="/clarify/help" element={<HelpPage />} />
           <Route path="/clarify/out-best" element={<BestOfClarify />} />
           <Route path="/clarify/about-us" element={<AboutClarify />} />
           <Route path="/clarify/advertising" element={<AdvertisingHome />} />
+
         </Route>
         <Route path="*" element={<NotFound />} />
 

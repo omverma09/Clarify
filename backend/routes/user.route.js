@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserByUsername, getMe, updateProfile, getMyFollowers, searchUsers } from "../controllers/user.controller.js";
+import { getUserByUsername, getMe, updateProfile, getMyFollowers, searchUsers, getUserById } from "../controllers/user.controller.js";
 import protect from "../middlewares/auth.middleware.js";
 import upload from "../config/cloudinary.config.js";
 
@@ -21,5 +21,6 @@ router.put("/profile/update", protect, upload.fields([
     { name: "banner", maxCount: 1 },
 ]), updateProfile);
 
+router.get("/chat/:id", protect, getUserById);
 
 export default router;

@@ -31,7 +31,7 @@ export default function DashboardProfile() {
       .then((res) => {
         setUser({
           ...res.data.user,
-          isFollowing: res.data.isFollowing, // 👈 IMPORTANT
+          isFollowing: res.data.isFollowing,
         });
         setPostCount(res.data.postCount);
       })
@@ -100,14 +100,14 @@ export default function DashboardProfile() {
               </button>
             </div>
           )}
-          <div className="flex items-center gap-6 mt-6"> {/* Yeh Tailwind se same line + spacing */}
+          <div className="flex items-center gap-6 mt-6">
             {!isOwner && (
               <>
                 <FollowBtn
                   userId={user._id}
-                  isFollowingInitial={user.isFollowing}   // 👈 backend se aaya hua
+                  isFollowingInitial={user.isFollowing}
                 />
-                <MessageBtn />
+                <MessageBtn userId={user._id} />
               </>
             )}
           </div>

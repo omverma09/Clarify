@@ -158,45 +158,6 @@ const Navbar = ({ size = 30 }) => {
           </button>
         )}
       </div>
-
-      {/* Mobile Menu Icon */}
-      <div className="sm:hidden">
-        <MenuIcon
-          className="cursor-pointer"
-          onClick={() => setMenuOpen(!menuOpen)}
-        />
-      </div>
-
-      {/* Mobile Dropdown */}
-      {menuOpen && (
-        <div className="absolute top-14 right-4 w-48 bg-white border rounded-lg shadow-lg flex flex-col gap-2 p-3 sm:hidden z-50">
-
-          <button className="nav-btn text-sm font-medium px-4 py-1.5 rounded-full border border-gray-300 hover:bg-gray-100 transition">
-            Ask
-          </button>
-
-          <button className="nav-btn text-sm font-medium px-4 py-1.5 rounded-full border border-gray-300 hover:bg-gray-100 transition">
-            Get App
-          </button>
-
-          {token ? (
-            <button
-              className="text-sm font-semibold px-5 py-1.5 rounded-full bg-[#FF4500] text-white hover:bg-[#E03D00] transition"
-              onClick={handleLogout}
-            >
-              Log Out
-            </button>
-          ) : (
-            <button
-              className="text-sm font-semibold px-5 py-1.5 rounded-full bg-[#FF4500] text-white hover:bg-[#E03D00] transition"
-              onClick={handleRegister}
-            >
-              Register
-            </button>
-          )}
-        </div>
-      )}
-
     </nav>
   );
 };
