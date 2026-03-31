@@ -10,7 +10,9 @@ import {
   Divider,
   BottomNavigation,
   BottomNavigationAction,
-  useMediaQuery
+  useMediaQuery,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
@@ -28,15 +30,18 @@ import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
 
 import { useNavigate, Link } from "react-router-dom";
 import API from "../api/axios.js";
+import { useAuth } from "../context/AuthContext .jsx";
 
 const NAVBAR_HEIGHT = 56;
 const EXPANDED_WIDTH = 240;
 const COLLAPSED_WIDTH = 60;
 
 export default function Sidebar() {
+  const {user2} = useAuth();
   const [open, setOpen] = React.useState(false);
   const [username, setUsername] = React.useState("");
   const [value, setValue] = React.useState(0);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const isMobile = useMediaQuery("(max-width:768px)");
 
@@ -59,7 +64,16 @@ export default function Sidebar() {
       .catch((err) => console.log(err));
   }, []);
 
-  // MOBILE VIEW (BOTTOM NAV)
+  // Profile Menu Handlers
+  const handleProfileClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileClose = () => {
+    setAnchorEl(null);
+  };
+
+  // MOBILE VIEW (BOTTOM NAV) - No changes
   if (isMobile) {
     return (
       <BottomNavigation
@@ -119,9 +133,10 @@ export default function Sidebar() {
     >
       {/* Toggle */}
       <div className="flex px-2 py-2 justify-center">
-        <IconButton onClick={() => setOpen(!open)}
-        className="hover:bg-gray-100 hover:rounded-lg"
-          >
+        <IconButton 
+          onClick={() => setOpen(!open)}
+          className="hover:bg-gray-100 hover:rounded-lg"
+        >
           {open && <span className="text-sm font-semibold mr-2">u/{username}</span>}
           <MenuIcon />
         </IconButton>
@@ -191,6 +206,61 @@ export default function Sidebar() {
           </ListItemButton>
         </ListItem>
       </List>
+
+      {/* New Profile Section at the Bottom */}
+      <Divider />
+      
+      <List sx={{ mt: "auto" }}>
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleProfileClick}>
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            {open && <ListItemText primary="Profile" />}
+          </ListItemButton>
+        </ListItem>
+      </List>
+
+      {/* Profile Popup Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleProfileClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        sx={{ mt: -1 }}
+      >
+        <MenuItem 
+          onClick={() => {
+            handleProfileClose();
+            navigate(`/clarify/user/${user?.username || username}`);
+          }}
+        >
+          My Profile
+        </MenuItem>
+        <MenuItem 
+          onClick={() => {
+            handleProfileClose();
+            navigate("/settings"); // You can change this route if needed
+          }}
+        >
+          Settings
+        </MenuItem>
+        <MenuItem 
+          onClick={() => {
+            handleProfileClose();
+            handleLogout();
+          }}
+        >
+          Logout
+        </MenuItem>
+      </Menu>
     </Drawer>
   );
 }
