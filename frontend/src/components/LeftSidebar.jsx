@@ -1,265 +1,232 @@
 import * as React from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import API from "../api/axios.js";
+import { useAuth } from "../context/AuthContext .jsx";
+
 import {
   Drawer,
-  List,
-  ListItem,
-  ListItemButton,
+  Tooltip,
+  Avatar,
+  Menu,
+  MenuItem,
   ListItemIcon,
-  ListItemText,
-  IconButton,
   Divider,
   BottomNavigation,
   BottomNavigationAction,
   useMediaQuery,
-  Menu,
-  MenuItem,
 } from "@mui/material";
 
-import MenuIcon from "@mui/icons-material/Menu";
-import HomeIcon from "@mui/icons-material/Home";
-import ExploreIcon from "@mui/icons-material/Explore";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import SendIcon from "@mui/icons-material/Send";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
-import WhatshotIcon from "@mui/icons-material/Whatshot";
-import HelpIcon from "@mui/icons-material/Help";
-import InfoIcon from "@mui/icons-material/Info";
-import FeaturedVideoIcon from "@mui/icons-material/FeaturedVideo";
-import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
-
-import { useNavigate, Link } from "react-router-dom";
-import API from "../api/axios.js";
-import { useAuth } from "../context/AuthContext .jsx";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import ExploreRoundedIcon from "@mui/icons-material/ExploreRounded";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import WhatshotRoundedIcon from "@mui/icons-material/WhatshotRounded";
+import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import CampaignOutlinedIcon from "@mui/icons-material/CampaignOutlined";
+import StarBorderRoundedIcon from "@mui/icons-material/StarBorderRounded";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 
 const NAVBAR_HEIGHT = 56;
-const EXPANDED_WIDTH = 240;
-const COLLAPSED_WIDTH = 60;
+const EXPANDED_WIDTH = 220;
+const COLLAPSED_WIDTH = 64;
+
+const NAV_ITEMS = [
+  { icon: <HomeRoundedIcon fontSize="small" />, label: "Home", path: "/" },
+  { icon: <WhatshotRoundedIcon fontSize="small" />, label: "Trending", path: "/clarify/trending" },
+  { icon: <ExploreRoundedIcon fontSize="small" />, label: "Explore", path: "/clarify/explore" },
+  { icon: <SendRoundedIcon fontSize="small" />, label: "Messages", path: "/chat" },
+];
+
+const SECONDARY_ITEMS = [
+  { icon: <InfoOutlinedIcon fontSize="small" />, label: "About Clarify", path: "/clarify/about-us" },
+  { icon: <CampaignOutlinedIcon fontSize="small" />, label: "Advertising", path: "/clarify/advertising" },
+  { icon: <StarBorderRoundedIcon fontSize="small" />, label: "Best of Clarify", path: "/clarify/out-best" },
+  { icon: <HelpOutlineRoundedIcon fontSize="small" />, label: "Help", path: "/clarify/help" },
+];
 
 export default function Sidebar() {
-  const {user2} = useAuth();
   const [open, setOpen] = React.useState(false);
   const [username, setUsername] = React.useState("");
-  const [value, setValue] = React.useState(0);
+  const [avatarUrl, setAvatarUrl] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [mobileValue, setMobileValue] = React.useState(0);
 
   const isMobile = useMediaQuery("(max-width:768px)");
-
-  const user = JSON.parse(localStorage.getItem("user"));
+  const location = useLocation();
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-    window.location.reload();
-  };
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
 
   React.useEffect(() => {
     API.get("/users/me", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
-      .then((res) => setUsername(res.data.username))
-      .catch((err) => console.log(err));
+      .then((res) => { setUsername(res.data.username); setAvatarUrl(res.data.image || ""); })
+      .catch(console.error);
   }, []);
 
-  // Profile Menu Handlers
-  const handleProfileClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleLogout = () => { localStorage.clear(); navigate("/"); window.location.reload(); };
+  const isActive = (path) => location.pathname === path;
 
-  const handleProfileClose = () => {
-    setAnchorEl(null);
-  };
-
-  // MOBILE VIEW (BOTTOM NAV) - No changes
+  // ── MOBILE ──
   if (isMobile) {
     return (
       <BottomNavigation
-        value={value}
-        onChange={(event, newValue) => setValue(newValue)}
+        value={mobileValue}
+        onChange={(_, v) => setMobileValue(v)}
         sx={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          borderTop: "1px solid #ddd",
-          zIndex: 999,
+          position: "fixed", bottom: 0, left: 0, right: 0, height: 60,
+          borderTop: "1px solid #f3f4f6", zIndex: 999, bgcolor: "#fff",
+          "& .MuiBottomNavigationAction-root": { minWidth: 0 },
         }}
       >
-        <BottomNavigationAction
-          icon={<HomeIcon />}
-          onClick={() => navigate("/")}
-          sx={{ "&.Mui-selected": { color: "#FF4500" } }}
-        />
-        <BottomNavigationAction
-          icon={<ExploreIcon />}
-          onClick={() => navigate("/explore")}
-          sx={{ "&.Mui-selected": { color: "#FF4500" } }}
-        />
-        <BottomNavigationAction
-          icon={<AddCircleOutlineIcon />}
-          onClick={() => navigate("/create")}
-          sx={{ "&.Mui-selected": { color: "#FF4500" } }}
-        />
-        <BottomNavigationAction
-          icon={<SendIcon />}
-          onClick={() => navigate("/chat")}
-          sx={{ "&.Mui-selected": { color: "#FF4500" } }}
-        />
-        <BottomNavigationAction
-          icon={<AccountCircleIcon />}
-          onClick={() => navigate(`/clarify/user/${user?.username}`)}
-          sx={{ "&.Mui-selected": { color: "#FF4500" } }}
-        />
+        {[
+          { icon: <HomeRoundedIcon />, path: "/" },
+          { icon: <ExploreRoundedIcon />, path: "/clarify/explore" },
+          { icon: <AddCircleRoundedIcon sx={{ fontSize: 30, color: "#FF4500" }} />, path: "/clarify/create" },
+          { icon: <SendRoundedIcon />, path: "/chat" },
+          { icon: <AccountCircleRoundedIcon />, path: `/clarify/user/${user?.username}` },
+        ].map((item, i) => (
+          <BottomNavigationAction
+            key={i}
+            icon={item.icon}
+            onClick={() => navigate(item.path)}
+            sx={{ color: "#9ca3af", "&.Mui-selected": { color: "#FF4500" } }}
+          />
+        ))}
       </BottomNavigation>
     );
   }
 
-  // DESKTOP SIDEBAR
+  // ── DESKTOP ──
   return (
     <Drawer
       variant="permanent"
       PaperProps={{
+        elevation: 0,
         sx: {
           top: `${NAVBAR_HEIGHT}px`,
           height: `calc(100% - ${NAVBAR_HEIGHT}px)`,
           width: open ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
-          transition: "0.3s",
-          borderRight: "1px solid #e5e7eb",
+          transition: "width 0.25s ease",
+          borderRight: "1px solid #f3f4f6",
+          overflowX: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          bgcolor: "#fff",
         },
       }}
     >
       {/* Toggle */}
-      <div className="flex px-2 py-2 justify-center">
-        <IconButton 
+      <div className="flex items-center gap-2.5 px-3 py-2.5 min-h-[52px]">
+        <button
           onClick={() => setOpen(!open)}
-          className="hover:bg-gray-100 hover:rounded-lg"
+          className="p-1.5 rounded-lg text-gray-600 hover:bg-orange-50 hover:text-orange-500 transition-colors cursor-pointer border-none bg-transparent"
         >
-          {open && <span className="text-sm font-semibold mr-2">u/{username}</span>}
-          <MenuIcon />
-        </IconButton>
+          <MenuRoundedIcon fontSize="small" />
+        </button>
+        {open && (
+          <span className="text-sm font-semibold text-orange-500 whitespace-nowrap overflow-hidden">
+            u/{username}
+          </span>
+        )}
       </div>
 
-      <Divider />
+      <Divider sx={{ borderColor: "#f3f4f6" }} />
 
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="/">
-            <ListItemIcon><HomeIcon /></ListItemIcon>
-            {open && <ListItemText primary="Home" />}
-          </ListItemButton>
-        </ListItem>
+      {/* Main Nav */}
+      <nav className="flex-1 py-2">
+        {NAV_ITEMS.map((item) => (
+          <Tooltip key={item.path} title={!open ? item.label : ""} placement="right" arrow>
+            <Link to={item.path} className="no-underline block">
+              <div className={`flex items-center gap-3 mx-2 my-0.5 px-2.5 py-2 rounded-xl cursor-pointer transition-colors text-sm font-medium overflow-hidden whitespace-nowrap
+                ${isActive(item.path)
+                  ? "bg-orange-50 text-orange-500"
+                  : "text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                <span className={`flex items-center shrink-0 ${isActive(item.path) ? "text-orange-500" : "text-gray-400"}`}>
+                  {item.icon}
+                </span>
+                {open && item.label}
+              </div>
+            </Link>
+          </Tooltip>
+        ))}
 
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon><WhatshotIcon /></ListItemIcon>
-            {open && <ListItemText primary="Trending" />}
-          </ListItemButton>
-        </ListItem>
+        <div className="my-2 border-t border-gray-100" />
 
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon><ExploreIcon /></ListItemIcon>
-            {open && <ListItemText primary="Explore" />}
-          </ListItemButton>
-        </ListItem>
+        {SECONDARY_ITEMS.map((item) => (
+          <Tooltip key={item.path} title={!open ? item.label : ""} placement="right" arrow>
+            <div
+              onClick={() => navigate(item.path)}
+              className="flex items-center gap-3 mx-2 my-0.5 px-2.5 py-2 rounded-xl cursor-pointer text-gray-400 hover:bg-gray-50 text-xs overflow-hidden whitespace-nowrap transition-colors"
+            >
+              <span className="flex items-center shrink-0">{item.icon}</span>
+              {open && item.label}
+            </div>
+          </Tooltip>
+        ))}
+      </nav>
 
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate("/chat")}>
-            <ListItemIcon><SendIcon /></ListItemIcon>
-            {open && <ListItemText primary="Send" />}
-          </ListItemButton>
-        </ListItem>
-      </List>
+      {/* Profile */}
+      <Divider sx={{ borderColor: "#f3f4f6" }} />
+      <div className="p-2">
+        <div
+          onClick={(e) => setAnchorEl(e.currentTarget)}
+          className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+        >
+          <Avatar
+            src={avatarUrl}
+            alt={username}
+            sx={{ width: 30, height: 30, bgcolor: "#FF4500", fontSize: 12 }}
+          >
+            {username?.[0]?.toUpperCase()}
+          </Avatar>
+          {open && (
+            <div className="min-w-0 overflow-hidden">
+              <p className="text-xs font-semibold text-gray-900 truncate">u/{username}</p>
+              <p className="text-[11px] text-gray-400">View profile</p>
+            </div>
+          )}
+        </div>
+      </div>
 
-      <Divider />
-
-      {/* ONLY DESKTOP OPTIONS */}
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate("/clarify/about-us")}>
-            <ListItemIcon><InfoIcon /></ListItemIcon>
-            {open && <ListItemText primary="About Clarify" />}
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate("/clarify/advertising")}>
-            <ListItemIcon><FeaturedVideoIcon /></ListItemIcon>
-            {open && <ListItemText primary="Advertising" />}
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate("/clarify/out-best")}>
-            <ListItemIcon><StarBorderPurple500Icon /></ListItemIcon>
-            {open && <ListItemText primary="Best of Clarify" />}
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate("/clarify/help")}>
-            <ListItemIcon><HelpIcon /></ListItemIcon>
-            {open && <ListItemText primary="Help" />}
-          </ListItemButton>
-        </ListItem>
-      </List>
-
-      {/* New Profile Section at the Bottom */}
-      <Divider />
-      
-      <List sx={{ mt: "auto" }}>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleProfileClick}>
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            {open && <ListItemText primary="Profile" />}
-          </ListItemButton>
-        </ListItem>
-      </List>
-
-      {/* Profile Popup Menu */}
+      {/* Profile Menu */}
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
-        onClose={handleProfileClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+        PaperProps={{
+          elevation: 2,
+          sx: { borderRadius: 2, minWidth: 160, border: "1px solid #f3f4f6" },
         }}
-        transformOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        sx={{ mt: -1 }}
       >
-        <MenuItem 
-          onClick={() => {
-            handleProfileClose();
-            navigate(`/clarify/user/${user?.username || username}`);
-          }}
-        >
-          My Profile
-        </MenuItem>
-        <MenuItem 
-          onClick={() => {
-            handleProfileClose();
-            navigate("/settings"); // You can change this route if needed
-          }}
-        >
-          Settings
-        </MenuItem>
-        <MenuItem 
-          onClick={() => {
-            handleProfileClose();
-            handleLogout();
-          }}
-        >
-          Logout
-        </MenuItem>
+        {
+          !token ? null :
+            <div>
+              <MenuItem onClick={() => { setAnchorEl(null); navigate(`/clarify/user/${user?.username || username}`); }} sx={{ fontSize: 14, gap: 1.5 }}>
+                <ListItemIcon sx={{ minWidth: 0 }}><PersonRoundedIcon fontSize="small" /></ListItemIcon>
+                My Profile
+              </MenuItem>
+              <MenuItem onClick={() => { setAnchorEl(null); navigate("/settings"); }} sx={{ fontSize: 14, gap: 1.5 }}>
+                <ListItemIcon sx={{ minWidth: 0 }}><SettingsRoundedIcon fontSize="small" /></ListItemIcon>
+                Settings
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={() => { setAnchorEl(null); handleLogout(); }} sx={{ fontSize: 14, gap: 1.5, color: "#ef4444" }}>
+                <ListItemIcon sx={{ minWidth: 0, color: "#ef4444" }}><LogoutRoundedIcon fontSize="small" /></ListItemIcon>
+                Logout
+              </MenuItem>
+            </div>
+        }
       </Menu>
     </Drawer>
   );

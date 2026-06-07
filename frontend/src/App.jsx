@@ -11,6 +11,7 @@ import UserProfilePage from "./pages/UserProfilePage.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
 import EditProfile from "./components/Editprofile.jsx";
 import CreatePost from "./components/CreatePost.jsx";
+import Progresspage from "./components/Progresspage.jsx";
 
 import HelpPage from "./components/help/HelpHomepage.jsx";
 import BestOfClarify from "./components/BestOfClarify/BestOfClarify.jsx";
@@ -36,6 +37,9 @@ function App() {
         <Route element={<UserprofileLayout />}>
 
           <Route element={<ProtectedRoute />}>
+            <Route path="/clarify/explore" element={<Progresspage/ >}/>
+            <Route path="/clarify/trending" element={<Progresspage/ >}/>
+            <Route path="/clarify/create" element={<Progresspage/ >}/>
             <Route path="/clarify/user/:username" element={<UserProfilePage />} />
             <Route path="/clarify/user/:username/edit" element={<EditProfile />} />
             <Route path="/clarify/user/:username/post-something" element={<CreatePost />} />

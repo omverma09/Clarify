@@ -4,6 +4,16 @@ import API from "../api/axios";
 import PostSkeleton from "./loadingCompos/FeedLoader.jsx";
 import Loader from "./loadingCompos/Loader.jsx";
 
+import WhatshotRoundedIcon from "@mui/icons-material/WhatshotRounded";
+import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
+
+const SORT_OPTIONS = [
+  { label: "Hot", icon: <WhatshotRoundedIcon style={{ fontSize: 15 }} /> },
+  { label: "New", icon: <AccessTimeRoundedIcon style={{ fontSize: 15 }} /> },
+  { label: "Top", icon: <AutoAwesomeRoundedIcon style={{ fontSize: 15 }} /> },
+];
+
 const PostFeed = () => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -11,96 +21,105 @@ const PostFeed = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState("");
+  const [sortBy, setSortBy] = useState("Hot");
 
   const observer = useRef();
 
-  // Infinite Scroll Observer
   const lastPostRef = useCallback(
     (node) => {
       if (loading) return;
-
       if (observer.current) observer.current.disconnect();
-
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setPage((prev) => prev + 1);
-        }
+        if (entries[0].isIntersecting && hasMore) setPage((p) => p + 1);
       });
-
       if (node) observer.current.observe(node);
     },
     [loading, hasMore]
   );
 
-  // Fetch Posts
   const fetchPosts = async () => {
     try {
       setLoading(true);
-
-      const res = await API.get(`/posts?page=${page}&limit=3`);
-
+      const res = await API.get(`/posts?page=${page}&limit=5`);
       setPosts((prev) => [...prev, ...res.data.posts]);
       setHasMore(res.data.hasMore);
-    } catch (err) {
-      setError("Failed to load posts");
-      console.error(err);
+    } catch {
+      setError("Failed to load posts. Please try again.");
     } finally {
       setLoading(false);
       setInitialLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchPosts();
-  }, [page]);
+  useEffect(() => { fetchPosts(); }, [page]);
 
-  // Initial Loading UI
   if (initialLoading) {
     return (
-      <div className="w-full py-6 text-center text-black-500">
-        <Loader />
+      <div className="max-w-2xl mx-auto px-4 py-5">
         <PostSkeleton />
       </div>
     );
   }
 
-  // Error UI
   if (error) {
     return (
-      <div className="max-w-2xl mx-auto py-6 text-center text-red-500">
-        {error}
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+        <p className="text-red-500 text-sm mb-4">{error}</p>
+        <button
+          onClick={() => { setError(""); setInitialLoading(true); fetchPosts(); }}
+          className="px-5 py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-full transition-colors"
+        >
+          Try Again
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-6">
+    <div className="max-w-2xl mx-auto px-4 py-4 pb-20">
+
+      {/* Sort Bar */}
+      <div className="flex gap-1.5 bg-white border border-gray-200 rounded-xl px-3 py-2 mb-4">
+        {SORT_OPTIONS.map((opt) => (
+          <button
+            key={opt.label}
+            onClick={() => setSortBy(opt.label)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors cursor-pointer
+              ${sortBy === opt.label
+                ? "bg-orange-50 text-orange-500 font-semibold"
+                : "text-gray-500 hover:bg-gray-100"
+              }`}
+          >
+            {opt.icon}
+            {opt.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Posts */}
       {posts.length === 0 ? (
-        <p className="text-center text-gray-500">No posts yet</p>
+        <div className="text-center py-16 text-gray-400 text-sm">
+          No posts yet. Be the first to post!
+        </div>
       ) : (
-        posts.map((post, index) => {
-          if (posts.length === index + 1) {
-            return (
-              <div ref={lastPostRef} key={post._id}>
-                <PostCard post={post} />
-              </div>
-            );
-          }
-          return <PostCard key={post._id} post={post} />;
-        })
+        posts.map((post, index) => (
+          <div key={post._id} ref={index === posts.length - 1 ? lastPostRef : null}>
+            <PostCard post={post} />
+          </div>
+        ))
       )}
 
-      {/* Bottom Loader */}
+      {/* Pagination Loader */}
       {loading && !initialLoading && (
         <div className="text-center py-4">
           <Loader />
         </div>
       )}
 
-      {/* No More Posts */}
-      {!hasMore && (
-        <p className="text-center text-gray-500 py-4">
-          No more posts to show
+      {/* End of Feed */}
+      {!hasMore && posts.length > 0 && (
+        <p className="text-center text-gray-400 text-xs py-6 border-t border-gray-100 mt-2">
+          You've seen all posts for now
         </p>
       )}
     </div>

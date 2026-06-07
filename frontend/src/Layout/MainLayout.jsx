@@ -5,21 +5,21 @@ import Feed from "../pages/Feed";
 
 const MainLayout = () => {
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      <div className="app layout main-content bg-gray-100">
-        <div className="left">
-          <LeftSidebar />
-        </div>
-        <div className="flex-1">
+      <div className="flex max-w-[1200px] mx-auto pt-14">
+        <LeftSidebar />
+
+        <main className="flex-1 min-w-0 px-4">
           <Feed />
-        </div>
-        <div className="right hidden sm:flex">
+        </main>
+
+        <div className="hidden md:block pr-4">
           <RightSidebar />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
